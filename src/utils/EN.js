@@ -116,11 +116,11 @@ exports.ORDINAL_WORDS_PATTERN = '(?:'
 
 var TIME_UNIT = 
     '(' + exports.INTEGER_WORDS_PATTERN + '|[0-9]+|[0-9]+\.[0-9]+|an?(?:\\s*few)?|half(?:\\s*an?)?)\\s*' +
-    '(sec(?:onds?)?|min(?:ute)?s?|hours?|weeks?|days?|months?|years?)\\s*';
+    '(sec(?:onds?)?|min(?:ute)?s?|hours?|weeks?|days?|months?|years?|fortnights?)\\s*';
 
 var TIME_UNIT_STRICT = 
     '(?:[0-9]+|an?)\\s*' +
-    '(?:seconds?|minutes?|hours?|days?)\\s*';
+    '(?:seconds?|minutes?|hours?|days?|fortnights?)\\s*';
 
 var PATTERN_TIME_UNIT = new RegExp(TIME_UNIT, 'i');
 
@@ -167,6 +167,8 @@ function collectDateTimeFragment(match, fragments) {
         fragments['month'] = num;
     } else if (match[2].match(/year/i)) {
         fragments['year'] = num;
+    } else if (match[2].match(/fortnight/i)) {
+        fragments['week'] = num * 2;
     }
 
     return fragments;

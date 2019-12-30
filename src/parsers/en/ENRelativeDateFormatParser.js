@@ -11,7 +11,7 @@ var util  = require('../../utils/EN');
 var PATTERN = new RegExp('(\\W|^)' +
     '(this|next|last|past)\\s*' +
     '('+ util.INTEGER_WORDS_PATTERN + '|[0-9]+|few|half(?:\\s*an?)?)?\\s*' +
-    '(seconds?|min(?:ute)?s?|hours?|days?|weeks?|months?|years?)(?=\\s*)' +
+    '(seconds?|min(?:ute)?s?|hours?|days?|weeks?|months?|years?|fortnights?)(?=\\s*)' +
     '(?=\\W|$)', 'i'
 );
 
@@ -92,7 +92,7 @@ exports.Parser = function ENRelativeDateFormatParser(){
             }
         }
         
-        if (match[RELATIVE_WORD_GROUP].match(/day|week|month|year/i)) {
+        if (match[RELATIVE_WORD_GROUP].match(/day|week|month|year|fortnight/i)) {
 
             if (match[RELATIVE_WORD_GROUP].match(/day/i)) {
                 date.add(num, 'd');
@@ -118,6 +118,13 @@ exports.Parser = function ENRelativeDateFormatParser(){
                 result.start.imply('day', date.date());
                 result.start.imply('month', date.month() + 1);
                 result.start.assign('year', date.year());
+            } else if (match[RELATIVE_WORD_GROUP].match(/fortnight/i)) {
+                date.add(num * 14, 'd');
+                // We don't know the exact date for next/last week so we imply
+                // them
+                result.start.imply('day', date.date());
+                result.start.imply('month', date.month() + 1);
+                result.start.imply('year', date.year());
             }
 
             return result;

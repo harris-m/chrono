@@ -11,14 +11,14 @@ var util  = require('../../utils/EN');
 var PATTERN = new RegExp('(\\W|^)' +
     '(within|in)\\s*' +
     '('+ util.INTEGER_WORDS_PATTERN + '|[0-9]+|an?(?:\\s*few)?|half(?:\\s*an?)?)\\s*' +
-    '(seconds?|min(?:ute)?s?|hours?|days?|weeks?|months?|years?)\\s*' +
+    '(seconds?|min(?:ute)?s?|hours?|days?|weeks?|months?|years?|fortnights?)\\s*' +
     '(?=\\W|$)', 'i'
 );
 
 var STRICT_PATTERN = new RegExp('(\\W|^)' +
     '(within|in)\\s*' +
     '('+ util.INTEGER_WORDS_PATTERN + '|[0-9]+|an?)\\s*' +
-    '(seconds?|minutes?|hours?|days?)\\s*' +
+    '(seconds?|minutes?|hours?|days?|fortnights?)\\s*' +
     '(?=\\W|$)', 'i'
 );
 
@@ -55,7 +55,7 @@ exports.Parser = function ENDeadlineFormatParser(){
         }
 
         var date = moment(ref);
-        if (match[4].match(/day|week|month|year/i)) {
+        if (match[4].match(/day|week|month|year|fortnight/i)) {
 
             if (match[4].match(/day/i)) {
                 date.add(num, 'd');
@@ -65,6 +65,8 @@ exports.Parser = function ENDeadlineFormatParser(){
                 date.add(num, 'month');
             } else if (match[4].match(/year/i)) {
                 date.add(num, 'year');
+            } else if (match[4].match(/fortnight/i)) {
+                date.add(num * 14, 'd');
             }
 
             result.start.imply('year', date.year());
