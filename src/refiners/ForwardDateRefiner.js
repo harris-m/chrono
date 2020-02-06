@@ -282,11 +282,38 @@ exports.Refiner = function ForwardDateRefiner() {
           result.start.isCertain("minute") &&
           refMoment.isAfter(result.start.moment())
         ) {
-          // Adjust day into future
-          result.start.imply("day", result.start.get("day") + 1);
+          let did_shift_by_meridiem = false;
 
-          if (result.end && !result.end.isCertain("day")) {
-            result.end.imply("day", result.end.get("day") + 1);
+          if (!result.start.isCertain("meridiem")) {
+            let result_plus_12_hours = result.start.clone();
+            result_plus_12_hours.imply("meridiem", 1);
+            result_plus_12_hours.assign(
+              "hour",
+              result_plus_12_hours.get("hour") + 12
+            );
+
+            if (!refMoment.isAfter(result_plus_12_hours.moment())) {
+              // Shift by meridiem
+              result.start.imply("meridiem", 1);
+              result.start.assign("hour", result.start.get("hour") + 12);
+              did_shift_by_meridiem = true;
+
+              if (result.end && !result.end.isCertain("day")) {
+                result.end.assign("hour", result.end.get("hour") + 12);
+                if (result.end.get("hour") >= 12) {
+                  result.end.imply("meridiem", 1);
+                }
+              }
+            }
+          }
+
+          if (!did_shift_by_meridiem) {
+            // Adjust day into future
+            result.start.imply("day", result.start.get("day") + 1);
+
+            if (result.end && !result.end.isCertain("day")) {
+              result.end.imply("day", result.end.get("day") + 1);
+            }
           }
 
           result.tags["ExtractTimezoneOffsetRefiner"] = true;
