@@ -1,15 +1,10 @@
-/*
-
-
-*/
-
-var moment = require('moment');
+const dayjs = require('dayjs');
 var Parser = require('../parser').Parser;
 var ParsedResult = require('../../result').ParsedResult;
 var ParsedComponents = require('../../result').ParsedComponents;
 
 var FIRST_REG_PATTERN  = new RegExp("(^|\\s|T)" +
-    "(?:(?:ao?|às?|das|da|do)\\s*)?" +
+    "(?:(?:ao?|às?|das|da|de|do)\\s*)?" +
     "(\\d{1,4}|meio-dia|meia-noite|meio dia|meia noite)" +
     "(?:" +
         "(?:\\.|\\:|\\：)(\\d{1,2})" +
@@ -47,7 +42,7 @@ exports.Parser = function PTTimeExpressionParser(){
 
         // This pattern can be overlaped Ex. [12] AM, 1[2] AM
         if (match.index > 0 && text[match.index-1].match(/\w/)) return null;
-        var refMoment = moment(ref);
+        var refMoment = dayjs(ref);
         var result = new ParsedResult();
         result.ref = ref;
         result.index = match.index + match[1].length;

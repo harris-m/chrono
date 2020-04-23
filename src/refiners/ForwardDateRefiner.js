@@ -3,7 +3,7 @@
     e.g. "March 12-13 (without year)" or "Thursday", the refiner will try to adjust the result
     into the future instead of the past.
 */
-var moment = require("moment");
+var dayjs = require('dayjs');
 var Refiner = require("./refiner").Refiner;
 
 var TIMEZONE_NAME_PATTERN = new RegExp(
@@ -213,18 +213,16 @@ exports.Refiner = function ForwardDateRefiner() {
     }
 
     results.forEach(function(result) {
-      var refMoment = moment(result.ref);
+      var refMoment = dayjs(result.ref);
 
       if (
-        result.start.isCertain("day") &&
-        result.start.isCertain("month") &&
-        !result.start.isCertain("year") &&
-        refMoment.isAfter(result.start.moment())
+        result.start.isOnlyDayMonthComponent() &&
+        refMoment.isAfter(result.start.dayjs())
       ) {
         // Adjust year into the future
         for (
           var i = 0;
-          i < 3 && refMoment.isAfter(result.start.moment());
+          i < 3 && refMoment.isAfter(result.start.dayjs());
           i++
         ) {
           result.start.imply("year", result.start.get("year") + 1);
@@ -234,27 +232,24 @@ exports.Refiner = function ForwardDateRefiner() {
           }
         }
 
-        result.tags["ExtractTimezoneOffsetRefiner"] = true;
+        result.tags["ForwardDateRefiner"] = true;
       }
 
       if (
-        !result.start.isCertain("day") &&
-        !result.start.isCertain("month") &&
-        !result.start.isCertain("year") &&
-        result.start.isCertain("weekday") &&
-        refMoment.isAfter(result.start.moment())
+        result.start.isOnlyWeekdayComponent() &&
+        refMoment.isAfter(result.start.dayjs())
       ) {
         // Adjust date to the coming week
         if (refMoment.day() > result.start.get("weekday")) {
-          refMoment.day(result.start.get("weekday") + 7);
+          refMoment = refMoment.day(result.start.get("weekday") + 7);
         } else {
-          refMoment.day(result.start.get("weekday"));
+          refMoment = refMoment.day(result.start.get("weekday"));
         }
 
         result.start.imply("day", refMoment.date());
         result.start.imply("month", refMoment.month() + 1);
         result.start.imply("year", refMoment.year());
-        result.tags["ExtractTimezoneOffsetRefiner"] = true;
+        result.tags["ForwardDateRefiner"] = true;
       }
 
       if (
@@ -280,7 +275,7 @@ exports.Refiner = function ForwardDateRefiner() {
           !result.start.isCertain("day") &&
           result.start.isCertain("hour") &&
           result.start.isCertain("minute") &&
-          refMoment.isAfter(result.start.moment())
+          refMoment.isAfter(result.start.dayjs())
         ) {
           let did_shift_by_meridiem = false;
 
@@ -292,7 +287,7 @@ exports.Refiner = function ForwardDateRefiner() {
               result_plus_12_hours.get("hour") + 12
             );
 
-            if (!refMoment.isAfter(result_plus_12_hours.moment())) {
+            if (!refMoment.isAfter(result_plus_12_hours.dayjs())) {
               // Shift by meridiem
               result.start.imply("meridiem", 1);
               result.start.assign("hour", result.start.get("hour") + 12);
@@ -316,7 +311,7 @@ exports.Refiner = function ForwardDateRefiner() {
             }
           }
 
-          result.tags["ExtractTimezoneOffsetRefiner"] = true;
+          result.tags["ForwardDateCustomRefiner"] = true;
         }
       }
     });

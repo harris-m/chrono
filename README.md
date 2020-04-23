@@ -15,9 +15,7 @@ Chrono supports most date and time formats, such as :
 * Sat Aug 17 2013 18:40:39 GMT+0900 (JST)
 * 2014-11-30T08:15:30-05:30
 
-## Install
-
-#### npm (recommended)
+## Installation
 
 Just run:
 ```bash
@@ -30,43 +28,11 @@ var chrono = require('chrono-node');
 chrono.parseDate('An appointment on Sep 12-13'); 
 ```
 
-#### Bower
+### Swift
 
-Prefer bower? You can do that, too:
+Try using the community-made [chrono-swift] wrapper.
 
-Just run:
-```bash
-$ bower install chrono
-```
-And use:
-   
-```html
-<script src="bower_components/chrono/chrono.min.js"></script>
-<script>chrono.parseDate('An appointment on Sep 12-13')</script>
-```
-    
-
-#### Other Options:
-
-Doing something else? No worries. Try these:
-
-Platform | Installation
----------|----
-CDN      | Via [jsDelivr]:<br> `<script src="https://cdn.jsdelivr.net/npm/chrono-node@VERSION/chrono.min.js"></script>`
-Rails    | Install from [Rails Assets] by adding this to your Gemfile:<br> `gem 'rails-assets-chrono', source: 'https://rails-assets.org'`
-Swift    | Try using the community-made [chrono-swift] wrapper.
-
-[Rails Assets]: https://rails-assets.org/
-[jsDelivr]: https://www.jsdelivr.com/projects/chrono
 [chrono-swift]: https://github.com/neilsardesai/chrono-swift
-
-#### Browserify
-
-Chrono's modules are linked and packaged using [Browserify](http://browserify.org) on `src/chrono.js`. By default, `chrono.js` file exports `chrono` object as a window global.
-
-```bash
-$ browserify src/chrono.js --s chrono -o chrono.js
-```
 
 ## Usage
 
@@ -314,9 +280,9 @@ $ npm run test
 $ npm run watch
 ```
 
-Chrono's source files is in `src` directory. The built bundle (`chrono.js` and `chrono.min.js`) can be built by [Browserify](http://browserify.org) on `src/chrono.js` using the following command 
+Chrono's source files is in `src` directory. The built bundle (`dist/*`) is created by running [Webpack](https://webpack.js.org/) via the following command 
 
 ```bash
-$ npm run make
+$ npm run build
 ```
 
