@@ -1521,8 +1521,8 @@ var ParsedResult = __webpack_require__(0).ParsedResult;
 
 var util = __webpack_require__(4);
 
-var PATTERN = new RegExp('(\\W|^)' + '(within|in)\\s*' + '(' + util.INTEGER_WORDS_PATTERN + '|[0-9]+|an?(?:\\s*few)?|half(?:\\s*an?)?)\\s*' + '(seconds?|min(?:ute)?s?|hours?|days?|weeks?|months?|years?|fortnights?)\\s*' + '(?=\\W|$)', 'i');
-var STRICT_PATTERN = new RegExp('(\\W|^)' + '(within|in)\\s*' + '(' + util.INTEGER_WORDS_PATTERN + '|[0-9]+|an?)\\s*' + '(seconds?|minutes?|hours?|days?|fortnights?)\\s*' + '(?=\\W|$)', 'i');
+var PATTERN = new RegExp("(\\W|^)" + "(within|in)\\s*" + "(" + util.INTEGER_WORDS_PATTERN + "|[0-9]+|an?(?:\\s*few)?|half(?:\\s*an?)?)\\s*" + "(seconds?|min(?:ute)?s?|hours?|days?|weeks?|months?|years?|fortnights?)\\s*" + "(?=\\W|$)", "i");
+var STRICT_PATTERN = new RegExp("(\\W|^)" + "(within|in)\\s*" + "(" + util.INTEGER_WORDS_PATTERN + "|[0-9]+|an?)\\s*" + "(seconds?|minutes?|hours?|days?|fortnights?)\\s*" + "(?=\\W|$)", "i");
 
 exports.Parser = function ENDeadlineFormatParser() {
   Parser.apply(this, arguments);
@@ -1544,7 +1544,7 @@ exports.Parser = function ENDeadlineFormatParser() {
 
     if (util.INTEGER_WORDS[num] !== undefined) {
       num = util.INTEGER_WORDS[num];
-    } else if (num === 'a' || num === 'an') {
+    } else if (num === "a" || num === "an") {
       num = 1;
     } else if (num.match(/few/i)) {
       num = 3;
@@ -1558,38 +1558,38 @@ exports.Parser = function ENDeadlineFormatParser() {
 
     if (match[4].match(/day|week|month|year|fortnight/i)) {
       if (match[4].match(/day/i)) {
-        date = date.add(num, 'd');
+        date = date.add(num, "d");
       } else if (match[4].match(/week/i)) {
-        date = date.add(num * 7, 'd');
+        date = date.add(num * 7, "d");
       } else if (match[4].match(/month/i)) {
-        date = date.add(num, 'month');
+        date = date.add(num, "month");
       } else if (match[4].match(/year/i)) {
-        date.add(num, 'year');
+        date = date.add(num, "year");
       } else if (match[4].match(/fortnight/i)) {
-        date.add(num * 14, 'd');
+        date = date.add(num * 14, "d");
       }
 
-      result.start.imply('year', date.year());
-      result.start.imply('month', date.month() + 1);
-      result.start.imply('day', date.date());
+      result.start.imply("year", date.year());
+      result.start.imply("month", date.month() + 1);
+      result.start.imply("day", date.date());
       return result;
     }
 
     if (match[4].match(/hour/i)) {
-      date = date.add(num, 'hour');
+      date = date.add(num, "hour");
     } else if (match[4].match(/min/i)) {
-      date = date.add(num, 'minute');
+      date = date.add(num, "minute");
     } else if (match[4].match(/second/i)) {
-      date = date.add(num, 'second');
+      date = date.add(num, "second");
     }
 
-    result.start.imply('year', date.year());
-    result.start.imply('month', date.month() + 1);
-    result.start.imply('day', date.date());
-    result.start.imply('hour', date.hour());
-    result.start.imply('minute', date.minute());
-    result.start.imply('second', date.second());
-    result.tags['ENDeadlineFormatParser'] = true;
+    result.start.imply("year", date.year());
+    result.start.imply("month", date.month() + 1);
+    result.start.imply("day", date.date());
+    result.start.imply("hour", date.hour());
+    result.start.imply("minute", date.minute());
+    result.start.imply("second", date.second());
+    result.tags["ENDeadlineFormatParser"] = true;
     return result;
   };
 };
