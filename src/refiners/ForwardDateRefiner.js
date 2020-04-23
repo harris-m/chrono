@@ -3,7 +3,7 @@
     e.g. "March 12-13 (without year)" or "Thursday", the refiner will try to adjust the result
     into the future instead of the past.
 */
-var dayjs = require('dayjs');
+var dayjs = require("dayjs");
 var Refiner = require("./refiner").Refiner;
 
 var TIMEZONE_NAME_PATTERN = new RegExp(
@@ -201,18 +201,18 @@ var DEFAULT_TIMEZONE_ABBR_MAP = {
   YAKT: 600,
   YAPT: 600,
   YEKST: 360,
-  YEKT: 360
+  YEKT: 360,
 };
 
 exports.Refiner = function ForwardDateRefiner() {
   Refiner.call(this);
 
-  this.refine = function(text, results, opt) {
+  this.refine = function (text, results, opt) {
     if (!opt["forwardDate"]) {
       return results;
     }
 
-    results.forEach(function(result) {
+    results.forEach(function (result) {
       var refMoment = dayjs(result.ref);
 
       if (
@@ -220,11 +220,7 @@ exports.Refiner = function ForwardDateRefiner() {
         refMoment.isAfter(result.start.dayjs())
       ) {
         // Adjust year into the future
-        for (
-          var i = 0;
-          i < 3 && refMoment.isAfter(result.start.dayjs());
-          i++
-        ) {
+        for (var i = 0; i < 3 && refMoment.isAfter(result.start.dayjs()); i++) {
           result.start.imply("year", result.start.get("year") + 1);
 
           if (result.end && !result.end.isCertain("year")) {
